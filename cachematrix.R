@@ -1,3 +1,11 @@
+######################################################################
+## R Programming Course: Programming Assignment #2                  ##
+## Coursera: John Hopkins Bloomberg School of Public Health         ##
+## Coursera Specialization: John Hopkins Data Science               ##
+## Course: R Programming                                            ##
+## Author: Jody P. Abney                                            ##
+######################################################################
+
 ## makeCacheMatrix(x = matrix) and cacheSolve(x,...) are a set of functions
 ## to used on a given square (invertible) matrices for the following purposes:
 ## 1) Conceptual
@@ -18,26 +26,16 @@
 ##    3) $setinverted - stores the inverted matrix in the "special" matrix
 ##    4) $getinverted - returns the inverted matrix stored in the "special"
 ##       matrix
+## The function also includes checks to ensure we are trying to store 
+## a square matrix
+
 makeCacheMatrix <- function(x = matrix()) {
     
     # start with a NULL inverted matrix
     im <- NULL
     
     # store a given square matrix in the "special" matrix
-    set <- function(y) {
-        # make sure we are trying to store a matrix
-        if(!is.matrix(y)) {
-            message("not a matrix")
-            return()
-        }
-        
-        # make sure we are trying to store a square matrix
-        y_dims = dim(y)
-        if(!(dim[1] == dim[2])) {
-            message("not a square matrix")
-            return()
-        }
-        
+    set <- function(y) {        
         x <<- y         ## store the square matrix      
         im <<- NULL     ## reset the inverted matrix to NULL
     }
@@ -55,22 +53,25 @@ makeCacheMatrix <- function(x = matrix()) {
     list(set = set, get = get,
          setinverted = setinverted,
          getinverted = getinverted)
-
 }
 
 
-## Write a short comment describing this function
+## cacheSolve(x,...) takes a makeCacheMatrix "special" matrix as input and
+## returns the inverted matrix based on the following:
+##   1) If we already have a cached inverted matrix, then return it; else
+##   2) Calculate the inverted matrix and cache it for later
 
 cacheSolve <- function(x, ...) {
         ## Return a matrix that is the inverse of 'x'
-    im <- x$getinverted()
-    if(!is.null(im)) {
+    im <- x$getinverted() ## get the stored inverted matrix from the "special" matrix
+    if(!is.null(im)) { ## if we have a cached inverted matrix, return it
         message("getting cached data")
         return(im)
     }
     
-    data <- x$get()
-    im <- solve(data)
-    x$setinverted(im)
-    im
+    ## Calculate the inverted matrix if needed
+    data <- x$get()   # get the square matrix
+    im <- solve(data) # calculate inverted matrix, a relatively expensive operation
+    x$setinverted(im) # cache the inverted matrix
+    im                # return the inverted matrix
 }
